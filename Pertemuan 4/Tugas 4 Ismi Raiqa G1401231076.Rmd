@@ -1,0 +1,145 @@
+---
+title: "Tugas 4 Yup"
+author: "Raiqa Maharani"
+date: "2025-09-23"
+output: html_document
+---
+
+```{r}
+library(TSA)
+```
+
+```{r}
+set.seed(1076)
+n <- 300
+wn <- rnorm(n)
+```
+
+
+# MA(2)
+
+```{r}
+theta1 <- 0.4
+theta2 <- 0.6
+```
+
+```{r}
+yt_ma2 <- numeric(n)
+for (t in 3:n) {
+  yt_ma2[t] <- wn[t] + theta1*wn[t-1] + theta2*wn[t-2]
+}
+
+yt_ma2
+```
+
+```{r}
+#arima.sim
+
+ma2 <- arima.sim(list(order=c(0,0,2), ma=c(theta1, theta2)), n=n)
+
+ma2
+```
+
+```{r}
+#Plot
+ts.plot(yt_ma2, main="Simulasi MA(2) Manual")
+ts.plot(ma2, main="Simulasi MA(2) arima.sim")
+```
+
+```{r}
+# ACF; PACF; EACF
+
+acf(yt_ma2, main="ACF MA(2)")
+pacf(yt_ma2, main="PACF MA(2)")
+eacf(yt_ma2)
+```
+
+```{r}
+# Scatterplot
+
+plot(yt_ma2[-1], yt_ma2[-n], main="MA(2): Yt vs Yt-1")
+plot(yt_ma2[-c(1:2)], yt_ma2[-(n-1):-(n)], main="MA(2): Yt vs Yt-2")
+plot(yt_ma2[-c(1:3)], yt_ma2[-(n-2):-(n)], main="MA(2): Yt vs Yt-3")
+```
+
+# AR(2)
+```{r}
+phi1 <- 0.5
+phi2 <- 0.2
+```
+
+```{r}
+yt_ar2 <- numeric(n)
+for (t in 3:n) {
+  yt_ar2[t] <- phi1*yt_ar2[t-1] + phi2*yt_ar2[t-2] + wn[t]
+}
+
+yt_ar2
+```
+
+```{r}
+#arima.sim
+ar2 <- arima.sim(list(order=c(2,0,0), ar=c(phi1, phi2)), n=n)
+
+ar2
+```
+
+```{r}
+#Plot Ts
+ts.plot(yt_ar2, main="Simulasi AR(2) Manual")
+ts.plot(ar2, main="Simulasi AR(2) arima.sim")
+```
+
+```{r}
+# ACF; PACF; EACF
+acf(yt_ar2, main="ACF AR(2)")
+pacf(yt_ar2, main="PACF AR(2)")
+eacf(yt_ar2)
+```
+
+```{r}
+# Scatterplot Lag
+plot(yt_ar2[-1], yt_ar2[-n], main="AR(2): Yt vs Yt-1")
+plot(yt_ar2[-c(1:2)], yt_ar2[-(n-1):-(n)], main="AR(2): Yt vs Yt-2")
+plot(yt_ar2[-c(1:3)], yt_ar2[-(n-2):-(n)], main="AR(2): Yt vs Yt-3")
+```
+
+# ARMA(2,2)
+
+```{r}
+yt_arma22 <- numeric(n)
+for (t in 3:n) {
+  yt_arma22[t] <- phi1*yt_arma22[t-1] + phi2*yt_arma22[t-2] +
+                  theta1*wn[t-1] + theta2*wn[t-2] + wn[t]
+}
+
+yt_arma22
+```
+
+```{r}
+#arima.sim
+arma22 <- arima.sim(list(order=c(2,0,2), ar=c(phi1, phi2), ma=c(theta1, theta2)), n=n)
+
+arma22
+```
+
+```{r}
+#Plot ts
+ts.plot(yt_arma22, main="Simulasi ARMA(2,2) Manual")
+ts.plot(arma22, main="Simulasi ARMA(2,2) arima.sim")
+```
+
+```{r}
+# ACF; PACF; EACF
+acf(yt_arma22, main="ACF ARMA(2,2)")
+pacf(yt_arma22, main="PACF ARMA(2,2)")
+eacf(yt_arma22)
+```
+
+```{r}
+# Scatterplog Lag
+plot(yt_arma22[-1], yt_arma22[-n], main="ARMA(2,2): Yt vs Yt-1")
+plot(yt_arma22[-c(1:2)], yt_arma22[-(n-1):-(n)], main="ARMA(2,2): Yt vs Yt-2")
+plot(yt_arma22[-c(1:3)], yt_arma22[-(n-2):-(n)], main="ARMA(2,2): Yt vs Yt-3")
+```
+
